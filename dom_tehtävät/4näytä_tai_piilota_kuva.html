@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Näytä tai piilota kuva</title>
+</head>
+<body>
+    <img id="kuva" src="https://alscofirstaid.com.au/home/placeholder-150x150/" alt="Kuva" style="display: block;">
+    <button id="naytaPiilotaKuva">Näytä/piilota kuva</button>
+
+    <script>
+        document.getElementById('naytaPiilotaKuva').addEventListener('click', function() {
+            let kuva = document.getElementById('kuva');
+            if (kuva.style.display === 'none') {
+                kuva.style.display = 'block';
+            } else {
+                kuva.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
