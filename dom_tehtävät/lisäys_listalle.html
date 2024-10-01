@@ -11,5 +11,13 @@
         <li>Kohde 2</li>
     </ul>
     <button id="lisaaKohde">Lisää uusi kohde</button>
+
+    <script>
+        document.getElementById('lisaaKohde').addEventListener('click', function() {
+            let uusiKohde = document.createElement('li');
+            uusiKohde.textContent = 'Uusi kohde';
+            document.getElementById('lista').appendChild(uusiKohde);
+        });
+    </script>
 </body>
 </html>
