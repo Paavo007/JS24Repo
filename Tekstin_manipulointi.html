@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muuta kappaleen tekstiä</title>
+</head>
+<body>
+    <p id="kappale">Tämä on alkuperäinen teksti.</p>
+    <button id="muutaTeksti">Muuta teksti</button>
+
+    <script>
+        document.getElementById('muutaTeksti').addEventListener('click', function(){
+            document.getElementById('kappale').textContent = 'Teksti on muutettu!';
+        });
+    </script>
+</body>
+</html>
