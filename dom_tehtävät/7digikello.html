@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Reaaliaikainen kello</h2>
+    <div id="kello"></div>
+
+    <script>
+        function nayteAika() {
+            let nyt = new Date();
+            let tunnit = nyt.getHours();
+            let minuutit = nyt.getMinutes();
+            let sekunnit = nyt.getSeconds();
+
+            minuutit = minuutit < 10 ? '0' + minuutit : minuutit;
+            sekunnit = sekunnit < 10 ? '0' + sekunnit : sekunnit;
+
+            let aika = tunnit + ':' + minuutit + ':' + sekunnit;
+            document.getElementById('kello').textContent = aika;
+        }
+
+        setInterval(nayteAika, 1000);
+        nayteAika();
+    </script>
+</body>
+</html>
