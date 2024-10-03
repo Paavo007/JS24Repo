@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satunnainen koirakuva API</title>
+</head>
+<body>
+    <h1>Satunnainen koirakuva</h1>
+    <button id="haeKuva">Hae koirakuva</button>
+    <br>
+    <img id="koiraKuva" src="" alt="Koira" style="display: none;">
+
+    <script>
+        document.getElementById('haeKuva').addEventListener('click', function() {
+            fetch('https://api.thedogapi.com/v1/images/search')
+                .then(response => response.json())
+                .then(data => {
+                    const kuvaUrl = data[0].url;
+                    const imgElement = document.getElementById('koiraKuva')
+                    imgElement.src = kuvaUrl;
+                    imgElement.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Virhe:', error);
+                });
+        });
+    </script>
+</body>
+</html>

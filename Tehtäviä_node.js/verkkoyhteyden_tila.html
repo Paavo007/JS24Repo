@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verkkoyhteyden tila</title>
+</head>
+<body>
+    <h1>Verkkoyhteyden tila</h1>
+    <p id="networkInfo">Odotetaan...</p>
+
+    <script>
+        function updateNetworkInfo() {
+            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            if(connection) {
+                const info = `Tyyppi: ${connection.effectiveType}, Maksiminopeus: ${connection.downlink}Mb/s, Viive: ${connection.rtt}ms`;
+                document.getElementById('networkInfo').textContent = info;
+            }
+            else {
+                document.getElementById('networkInfo').textContent = 'Verkkoyhteyden tiedot eivät ole saatavilla. ';
+            }
+        }
+
+        updateNetworkInfo();
+
+        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        if(connection) {
+            connection.addEventListener('change', updateNetworkInfo);
+        }
+    </script>
+</body>
+</html>
