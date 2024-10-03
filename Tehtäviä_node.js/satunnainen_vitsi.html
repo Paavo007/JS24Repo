@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satunnainen vitsi</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: rgb(203, 168, 235);
+        }
+
+        button {
+            height: 100px;
+            width: 190px;
+            background-color: aquamarine;
+            border-radius: 10px;
+            font-size: 40px;
+        }
+
+        h1{
+            font-size: 75px
+        }
+
+        #vitsi{
+            padding-top: 10px;
+            font-size: 60px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Satunnainen vitsi</h1>
+    <button id="haeVitsi">Hae vitsi</button>
+    <div id="vitsi"></div>
+
+    <script>
+        document.getElementById('haeVitsi').addEventListener('click', function() {
+            fetch('https://v2.jokeapi.dev/joke/Any')
+                .then(response => response.json())
+                .then(data => {
+                    const vitsiDiv = document.getElementById('vitsi');
+                    if(data.type === 'single') {
+                        vitsiDiv.textContent = data.joke;
+                    } else {
+                        vitsiDiv.innerHTML = `${data.setup}<br><strong>${data.delivery}</strong>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Virhe:', error);
+                })
+        })
+    </script>
+</body>
+</html>
