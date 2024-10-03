@@ -95,24 +95,10 @@
                     let taidot = data.abilities;
                     let liikkeet = data.moves;
 
-                    let strtaidot = ""
-                    let strliikkeet = ""
+                    taidot = taidot.map(taidot => taidot.ability.name).join(", ")
+                    liikkeet = liikkeet.map(liikkeet => liikkeet.move.name).join(", ")
 
-                    taidot.forEach(function(a, i) {
-                        strtaidot = strtaidot+" "+a.ability.name
-
-                        if (i < taidot.length-1) {
-                            strtaidot = strtaidot + ","
-                        }
-                    })
-
-                    liikkeet.forEach(function(a, i) {
-                        strliikkeet = strliikkeet+" "+a.move.name
-                        
-                        if (i < liikkeet.length-1) {
-                            strliikkeet = strliikkeet + "," 
-                        }
-                    })
+                    console.log(data)
 
                     document.getElementById('pokemonTiedot').innerHTML = `
                         <h2>${nimi}</h2>
@@ -120,8 +106,8 @@
                         <p><strong>Tyyppi:</strong> ${tyyppi}</p>
                         <p><strong>Paino:</strong> ${paino} kg</p>
                         <p><strong>Pituus:</strong> ${pituus} m</p>
-                        <p><strong>Taidot:</strong> ${strtaidot}</p>
-                        <p><strong>Liikkeet:</strong> ${strliikkeet}</p>
+                        <p><strong>Taidot:</strong> ${taidot}</p>
+                        <p><strong>Liikkeet:</strong> ${liikkeet}</p>
                     `;
                 })
                 .catch(error => {
