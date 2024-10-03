@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            text-align: center;
+            background: rgb(62,60,96);
+        }
+
+        h1 {
+            font-size: 70px;
+            color: rgb(238, 192, 232);
+        }
+
+        button {
+            height: 80px;
+            width: 180px;
+            font-size: 40px;
+            border-radius: 15px;
+        }
+
+        strong {
+            font-size: 60px;
+            color: rgb(121, 230, 117);
+        }
+
+        p {
+            font-size: 30px;
+            color: rgb(248, 248, 248);
+        }
+
+        img {
+            height: 50px;
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Satunnainen Chuck Norris vitsi</h1>
+    <button id="haeVitsi">Hae vitsi</button>
+    <div id="vitsi"></div>
+
+    <script>
+        document.getElementById('haeVitsi').addEventListener('click', function() {
+            fetch('https://api.chucknorris.io/jokes/random')
+                .then(response => response.json())
+                .then(data => {
+                    const vitsiDiv = document.getElementById('vitsi');
+                    const joke = data.value; // Extract the joke
+                    const createdAt = new Date(data.created_at); // Create Date object
+
+                    // Format the date to remove milliseconds
+                    const options = { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric', 
+                        hour: '2-digit', 
+                        minute: '2-digit', 
+                        hour12: false 
+                    };
+                    const formattedDate = createdAt.toLocaleString('fi-FI', options);
+
+                    // Display the joke and the formatted date
+                    vitsiDiv.innerHTML = `<strong>${joke}</strong><br><p>Vitsin on julkaistu ${formattedDate}</p><br><img src="${data.icon_url}">`;
+                })
+                .catch(error => {
+                    console.error('Virhe:', error);
+                });
+        });
+    </script>
+</body>
+</html>
