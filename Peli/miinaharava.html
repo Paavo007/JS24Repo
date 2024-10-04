@@ -4,26 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Miinaharava</title>
+    <link rel="stylesheet" href="miinaharava.css">
+    <script src="miinaharava.js"></script>
 </head>
 <body>
-    <h1>Miinaharava</h1>
-    <div id="canvas"></div>
-
-    <script>
-        var canvas = document.getElementById('canvas');
-        var cont = canvas.getContext("2d");
-
-        cont.strokeStyle = "white";
-        cont.rect(0, 0, 1000, 1000);
-        cont.stroke();
-        cont.fillStyle = "black";
-
-        var step = 40;
-        for (var x = 0; x <= 10; x++) {
-            for(var y = 0; y <= 10; y++) {
-                cont.fillRect(x*step, y*step, 20, 20);
-            }
-        }
-    </script>
+    <h1>Mines: <span id="mines-count">0</span></h1>
+    <div id="board">
+        
+    </div>
+    <br>
+    <button id="flag-button">🚩</button>
 </body>
 </html>
