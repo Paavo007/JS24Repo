@@ -3,41 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Miinaharava</title>
+    <title> Miinaharava</title>
+    <link rel="icon" href="OIF.jpg">
     <link rel="stylesheet" href="miinaharava.css">
     <script src="miinaharava.js"></script>
 </head>
 <body>
+    <img src="asteikko.png" alt="">
     <h1>Mines: <span id="mines-count">0</span></h1>
-    <form action="miinaharava.html">
+    <form id="settings-form" action="miinaharava.html">
         <!--
             Input rivien määrälle
         -->
         <label for="rows">Number of rows:</label>
-        <input type="text" id="rows" value="10">
+        <input type="text" id="rows" value="8">
         <br>
         <!--
             Input pysty rivien määrälle
         -->
         <label for="columns">Number of columns:</label>
-        <input type="text" id="columns" value="10">
+        <input type="text" id="columns" value="8">
         <!--
             Input miinojen määrälle
         -->
         <br>
         <label for="mines">Number of mines:</label>
-        <input type="text" value="10">
+        <input type="text" id="mines" value="10">
         <!--
             Input muutosten teolle
         -->
         <br>
-        <input type="submit" value="Commit changes">
+        <input id="changes-button" type="submit" value="Commit changes">
     </form>
+    <button id="flag-button">🚩</button>
+    <Button id="restart-button"><a onClick="clearboard()">🔃</a></Button>
     <div id="board">
         
     </div>
-    <br>
-    <button id="flag-button">🚩</button>
-    <Button id="restart-button"><a onClick="window.location.reload()">🔃</a></Button>
 </body>
 </html>
