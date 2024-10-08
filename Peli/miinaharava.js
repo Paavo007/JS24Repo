@@ -138,10 +138,20 @@ function clickTile() {
     if (flagEnabled) {
         if (tile.innerText == "") {
             tile.innerText = "🚩";
+            updateMinesCount(-1);
         } else if (tile.innerText == "🚩") {
             tile.innerText = "";
+            updateMinesCount(1);
         }
         return;
+    }
+
+    function updateMinesCount(value) {
+        let minesCountElement = document.getElementById("mines-count");
+        let currentCount = parseInt(minesCountElement.innerText);
+    
+        // Update the text to reflect the new mines count (or flags count)
+        minesCountElement.innerText = currentCount + value;
     }
 
     // Start the timer on the first click
