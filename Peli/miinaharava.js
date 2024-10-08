@@ -1,18 +1,18 @@
-/*let savedrows = localStorage.getItem("saved_rows") || 8
-let savedcols = localStorage.getItem("saved_cols") || 8
-let savedmines = localStorage.getItem("saved_mines") || 10*/
-
 let board = [];
 let rows = 8;
 let columns = 8;
 
 let minesCount = 10;
-let minesLocation = []; // "2-2", "3-4", "2-1"
+let minesLocation = [];
 
-let tilesClicked = 0; //goal to click all tiles except the ones containing mines
+let tilesClicked = 0; // goal to click all tiles except the ones containing mines
 let flagEnabled = false;
-
 let gameOver = false;
+
+// Timer variables
+let timerInterval;
+let secondsPassed = 0;
+let timerStarted = false; // Track whether the timer has started
 
 window.onload = function() {
     startGame();
@@ -27,63 +27,56 @@ function userInput() {
         minesCount = parseFloat(document.getElementById("mines").value);
 
         if (rows >= 1_001) {
-            rows = 1000
+            rows = 1000;
         }
 
         if (columns >= 1_001) {
-            columns = 1000
+            columns = 1000;
         }
 
-        if (minesCount >= (columns*rows)-1) {
-            minesCount = (columns*rows)-1
+        if (minesCount >= (columns * rows) - 1) {
+            minesCount = (columns * rows) - 1;
         }
 
         if (minesCount <= 0) {
             minesCount = 1;
         }
 
-        document.getElementById("rows").value = rows
-        document.getElementById("columns").value = columns
-        document.getElementById("mines").value = minesCount
+        document.getElementById("rows").value = rows;
+        document.getElementById("columns").value = columns;
+        document.getElementById("mines").value = minesCount;
 
         let tileWidth = 48; // Width of each tile in pixels
         let tileHeight = 48;
-
         let tileGap = 2; // Gap between tiles in pixels (if any)
         let totalWidth = (tileWidth * columns) + (tileGap * (columns - 1));
-        let totalHeight = (tileHeight * rows) + (tileGap * (rows -1));
+        let totalHeight = (tileHeight * rows) + (tileGap * (rows - 1));
         
         if (totalWidth >= 1300) {
-            document.getElementById("oikea").style = "order: 1;"
-            document.getElementById("vasen").style = "order: 2;"
-            document.getElementById("board").style = "width: "+totalWidth+"px; height: "+totalHeight+"px; order: 3;"
-        }
-        else {
-            document.getElementById("oikea").style = "order: 1;"
-            document.getElementById("vasen").style = "order: 3;"
-            document.getElementById("board").style = "width: "+totalWidth+"px; height: "+totalHeight+"px; order: 2;"
+            document.getElementById("oikea").style = "order: 1;";
+            document.getElementById("vasen").style = "order: 2;";
+            document.getElementById("board").style = "width: " + totalWidth + "px; height: " + totalHeight + "px; order: 3;";
+        } else {
+            document.getElementById("oikea").style = "order: 1;";
+            document.getElementById("vasen").style = "order: 3;";
+            document.getElementById("board").style = "width: " + totalWidth + "px; height: " + totalHeight + "px; order: 2;";
         }
 
-        /*localStorage.setItem("saved_rows", rows)
-        ocalStorage.setItem("saved_cols", columns)
-        ocalStorage.setItem("saved_mines", minesCount)*/
-
-        // Reset game settings
         resetGame();
-
         startGame();
     });
 }
 
-function resetGame() { 
+function resetGame() {
     board = [];
     tilesClicked = 0;
     minesLocation = [];
     gameOver = false;
-    
-    // Clear the current board
+    timerStarted = false; // Reset the timer flag when resetting the game
+
     let boardElement = document.getElementById("board");
     boardElement.innerHTML = "";
+    stopTimer(); // Stop the timer when resetting the game
 }
 
 function setMines() {
@@ -100,26 +93,21 @@ function setMines() {
     }
 }
 
-
 function startGame() {
     document.getElementById("mines-count").innerText = minesCount;
     document.getElementById("flag-button").addEventListener("click", setFlag);
     userInput();
 
-    //Set the board's grid layout dynamically based on the number of rows and columns
     let boardElement = document.getElementById("board");
     boardElement.style.gridTemplateRows = `repeat(${rows}, 48px)`;
     boardElement.style.gridTemplateColumns = `repeat(${columns}, 48px)`;
 
     setMines();
-
     boardElement.innerHTML = '';
 
-    //populate the board
     for (let r = 0; r < rows; r++) {
         let row = [];
         for (let c = 0; c < columns; c++) {
-            //<div id="0-0"></div>
             let tile = document.createElement("div");
             tile.id = r.toString() + "-" + c.toString();
             tile.addEventListener("click", clickTile);
@@ -128,16 +116,13 @@ function startGame() {
         }
         board.push(row);
     }
-
-    //console.log(board);
 }
 
 function setFlag() {
     if (flagEnabled) {
         flagEnabled = false;
         document.getElementById("flag-button").style.backgroundColor = "lightgray";
-    }
-    else {
+    } else {
         flagEnabled = true;
         document.getElementById("flag-button").style.backgroundColor = "darkgray";
     }
@@ -153,22 +138,26 @@ function clickTile() {
     if (flagEnabled) {
         if (tile.innerText == "") {
             tile.innerText = "🚩";
-        }
-        else if (tile.innerText == "🚩") {
+        } else if (tile.innerText == "🚩") {
             tile.innerText = "";
         }
         return;
     }
 
+    // Start the timer on the first click
+    if (!timerStarted) {
+        startTimer();  // Start the timer when a tile is clicked for the first time
+        timerStarted = true;
+    }
+
     if (minesLocation.includes(tile.id)) {
-        // alert("GAME OVER");
         gameOver = true;
         revealMines();
+        stopTimer(); // Stop the timer when the game is over
         return;
     }
 
-
-    let coords = tile.id.split("-"); // "0-0" -> ["0", "0"]
+    let coords = tile.id.split("-");
     let r = parseInt(coords[0]);
     let c = parseInt(coords[1]);
     checkMine(r, c);
@@ -176,18 +165,19 @@ function clickTile() {
     tile.classList.add("tile-clicked");
     tile.style.backgroundColor = "darkgrey";
 
-    if(tile.innerText === ""){
+    if (tile.innerText === "") {
         checkMine(r, c);
     }
 }
 
 function revealMines() {
-    for (let r= 0; r < rows; r++) {
+    stopTimer();  // Stop the timer when the game is over
+    for (let r = 0; r < rows; r++) {
         for (let c = 0; c < columns; c++) {
             let tile = board[r][c];
             if (minesLocation.includes(tile.id)) {
                 tile.innerText = "💣";
-                tile.style.backgroundColor = "red";                
+                tile.style.backgroundColor = "red";
             }
         }
     }
@@ -207,52 +197,35 @@ function checkMine(r, c) {
 
     let minesFound = 0;
 
-    //top 3
-    minesFound += checkTile(r-1, c-1);      //top left
-    minesFound += checkTile(r-1, c);        //top 
-    minesFound += checkTile(r-1, c+1);      //top right
-
-    //left and right
-    minesFound += checkTile(r, c-1);        //left
-    minesFound += checkTile(r, c+1);        //right
-
-    //bottom 3
-    minesFound += checkTile(r+1, c-1);      //bottom left
-    minesFound += checkTile(r+1, c);        //bottom 
-    minesFound += checkTile(r+1, c+1);      //bottom right
+    minesFound += checkTile(r-1, c-1);
+    minesFound += checkTile(r-1, c);
+    minesFound += checkTile(r-1, c+1);
+    minesFound += checkTile(r, c-1);
+    minesFound += checkTile(r, c+1);
+    minesFound += checkTile(r+1, c-1);
+    minesFound += checkTile(r+1, c);
+    minesFound += checkTile(r+1, c+1);
 
     if (minesFound > 0) {
         board[r][c].innerText = minesFound;
         board[r][c].classList.add("x" + minesFound.toString());
-    }
-    else {
+    } else {
         board[r][c].innerText = "";
-        
-        //top 3
-        checkMine(r-1, c-1);    //top left
-        checkMine(r-1, c);      //top
-        checkMine(r-1, c+1);    //top right
-
-        //left and right
-        checkMine(r, c-1);      //left
-        checkMine(r, c+1);      //right
-
-        //bottom 3
-        checkMine(r+1, c-1);    //bottom left
-        checkMine(r+1, c);      //bottom
-        checkMine(r+1, c+1);    //bottom right
+        checkMine(r-1, c-1);
+        checkMine(r-1, c);
+        checkMine(r-1, c+1);
+        checkMine(r, c-1);
+        checkMine(r, c+1);
+        checkMine(r+1, c-1);
+        checkMine(r+1, c);
+        checkMine(r+1, c+1);
     }
 
     if (tilesClicked == rows * columns - minesCount) {
         document.getElementById("mines-count").innerText = "Cleared";
         gameOver = true;
+        stopTimer();  // Stop the timer when the game is won
     }
-}
-
-function clearboard() {
-    resetGame()
-
-    startGame()
 }
 
 function checkTile(r, c) {
@@ -265,28 +238,54 @@ function checkTile(r, c) {
     return 0;
 }
 
+function clearboard() {
+    resetGame();
+    startGame();
+    resetTimer()
+}
+
 document.addEventListener("keydown", function(e) {
     if (e.key == "f") {
-        setFlag()
+        setFlag();
     }
-
     if (e.key == "r") {
-        clearboard()
+        clearboard();
+        resetTimer();
     }
-
-    if (e.key == "c") { 
-        clearmines()
+    if (e.key == "c") {
+        clearmines();
     }
 })
 
 function clearmines() {
-    for (i=0; i<=rows-1; i++) { 
-        for(x=0; x<=columns-1; x++) {
-            let str = i+"-"+x 
-    
-            if (minesLocation.includes(str) == false) {
-                checkMine(i, x)
+    for (let i = 0; i <= rows - 1; i++) {
+        for (let x = 0; x <= columns - 1; x++) {
+            let str = i + "-" + x;
+            if (!minesLocation.includes(str)) {
+                checkMine(i, x);
             }
-        } 
+        }
     }
+}
+
+// Timer functions
+function startTimer() {
+    timerInterval = setInterval(updateTimer, 1000);
+}
+
+function updateTimer() {
+    secondsPassed++;
+    let minutes = Math.floor(secondsPassed / 60);
+    let seconds = secondsPassed % 60;
+    let timeString = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+    document.getElementById("timer").innerText = timeString;
+}
+
+function stopTimer() {
+    clearInterval(timerInterval);
+}
+
+function resetTimer() {
+    secondsPassed = 0;
+    document.getElementById("timer").innerText = "00:00";
 }

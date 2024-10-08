@@ -10,6 +10,7 @@
 </head>
 <body>
     <h1>Minesweeper</h1>
+    <div id="timer">00:00</div>
     <h2>Mines: <span id="mines-count">0</span></h1>
     <div id="grid-container">
         <div id="oikea" class="grid-item">
@@ -38,7 +39,7 @@
                 <input id="changes-button" type="submit" value="Commit changes">
             </form>
             <button id="flag-button">🚩</button>
-            <button onClick="clearboard()" id="restart-button">🔃</button>
+            <button onClick="clearboard();" id="restart-button">🔃</button>
         </div>
         <div id="board" class="grid-item">
         
