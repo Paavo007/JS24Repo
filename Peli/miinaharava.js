@@ -47,12 +47,22 @@ function userInput() {
         document.getElementById("mines").value = minesCount
 
         let tileWidth = 48; // Width of each tile in pixels
+        let tileHeight = 48;
+
         let tileGap = 2; // Gap between tiles in pixels (if any)
         let totalWidth = (tileWidth * columns) + (tileGap * (columns - 1));
-
-        console.log(totalWidth)
-
-        document.getElementById("board").style = "width: "+totalWidth+"px "
+        let totalHeight = (tileHeight * rows) + (tileGap * (rows -1));
+        
+        if (totalWidth >= 1300) {
+            document.getElementById("oikea").style = "order: 1;"
+            document.getElementById("vasen").style = "order: 2;"
+            document.getElementById("board").style = "width: "+totalWidth+"px; height: "+totalHeight+"px; order: 3;"
+        }
+        else {
+            document.getElementById("oikea").style = "order: 1;"
+            document.getElementById("vasen").style = "order: 3;"
+            document.getElementById("board").style = "width: "+totalWidth+"px; height: "+totalHeight+"px; order: 2;"
+        }
 
         /*localStorage.setItem("saved_rows", rows)
         ocalStorage.setItem("saved_cols", columns)

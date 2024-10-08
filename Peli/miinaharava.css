@@ -5,6 +5,19 @@ body {
     background-color: #e5e5e5; /* Optional background color for the body */
 }
 
+tr, th{
+    padding-right: 7px;
+}
+
+table {
+    background-color: #d9d9d9;
+    border: 3px solid black;
+    text-align: left;
+    border-collapse: collapse;
+    width: 100%;
+    overflow: hidden; /* Ensure border-radius applies to the entire table */
+}
+
 #board {
     border: 5px solid darkgray; /* Adjusted for a cleaner look */
     background-color: lightgray;
@@ -17,7 +30,7 @@ body {
 #board div {
     width: 40px; /* Adjusted for better scaling */
     height: 40px; /* Adjusted for better scaling */
-    border: 1px solid #bfbfbf; /* Lighter border for a cleaner look */
+    border: 2px solid #949494; /* Lighter border for a cleaner look */
     background-color: #d9d9d9; /* Slightly darker tile background */
     display: flex;
     justify-content: center;
@@ -70,4 +83,16 @@ body {
     border-radius: 10px;
     cursor: pointer;
     border: none;
+}
+
+#grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* Two equal columns */
+    gap: 20px; /* Add some space between columns */
+    padding: 10px;
+    justify-items: start;
+}
+
+.grid-item {
+    padding: 20px;
 }
