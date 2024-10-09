@@ -9,165 +9,160 @@
 <body>
     <div class="container">
         <div class="display">
-            <input id="screen" type="text" placeholder="0">
+            <textarea id="screen" placeholder="0" rows="4" cols="50"></textarea>
         </div>
         <div class="btns">
             <div class="row">
                 <button id="ce" onclick="backspc()">CE</button>
                 <button onclick="fact()">x!</button>
-                <button class="btn" onclick="openParenthesis()">(</button>
-                <button class="btn" onclick="closeParenthesis()">)</button>
-                <button class="btn">%</button>
-                <button id="ac" onclick="screen.value = ''">AC</button>
+                <button onclick="appendText('(')">(</button>
+                <button onclick="appendText(')')">)</button>
+                <button onclick="appendText('%')">%</button>
+                <button id="ac" onclick="clearScreen()">AC</button>
             </div>
 
             <div class="row">
                 <button onclick="sin()">sin</button>
                 <button onclick="pi()">π</button>
-                <button class="btn">7</button>
-                <button class="btn">8</button>
-                <button class="btn">9</button>
-                <button class="btn">÷</button>
+                <button onclick="appendText('7')">7</button>
+                <button onclick="appendText('8')">8</button>
+                <button onclick="appendText('9')">9</button>
+                <button onclick="appendText('/')">÷</button>
             </div>
 
             <div class="row">
                 <button onclick="cos()">cos</button>
                 <button onclick="log()">log</button>
-                <button class="btn">4</button>
-                <button class="btn">5</button>
-                <button class="btn">6</button>
-                <button class="btn" onclick="multiply()">x</button>
+                <button onclick="appendText('4')">4</button>
+                <button onclick="appendText('5')">5</button>
+                <button onclick="appendText('6')">6</button>
+                <button onclick="appendText('*')">x</button>
             </div>
 
             <div class="row">
                 <button onclick="tan()">tan</button>
                 <button onclick="sqrt()">√</button>
-                <button class="btn">1</button>
-                <button class="btn">2</button>
-                <button class="btn">3</button>
-                <button class="btn" onclick="subtract()">-</button>
+                <button onclick="appendText('1')">1</button>
+                <button onclick="appendText('2')">2</button>
+                <button onclick="appendText('3')">3</button>
+                <button onclick="appendText('-')">-</button>
             </div>
 
             <div class="row">
                 <button onclick="e()">e</button>
-                <button onclick="pow()">x <span style="position: relative; bottom: .4em; right: .1em;">y</span></button>
-                <button class="btn">0</button>
-                <button class="btn">.</button>
+                <button onclick="pow()">x<sup>y</sup></button>
+                <button onclick="appendText('0')">0</button>
+                <button onclick="appendText('.')">.</button>
                 <button id="eval" onclick="evaluateExpression()">=</button>
-                <button class="btn" onclick="add()">+</button>
+                <button onclick="appendText('+')">+</button>
             </div>
         </div>
     </div>
 </body>
+
 <script>
     var screen = document.querySelector('#screen');
-    var btn = document.querySelectorAll('.btn');
+    var historyArray = [];  // Array to store calculation history
 
-    for(item of btn) {
-        item.addEventListener('click',(e)=> {
-            btnText = e.target.innerText;
-
-            if(btnText == 'x'){
-                btnText = '*';
-            }
-
-            if(btnText == '÷') {
-                btnText = '/';
-            }
-
-            screen.value += btnText;
-        });
+    // Append text to the screen based on input
+    function appendText(text) {
+        screen.value += text;
     }
 
     function sin() {
-        screen.value += 'sin('; // Append sin(
+        appendText('sin(');  // Append sin(
     }
 
     function cos() {
-        screen.value += 'cos('; // Append cos(
+        appendText('cos(');  // Append cos(
     }
 
     function tan() {
-        screen.value += 'tan('; // Append tan(
+        appendText('tan(');  // Append tan(
     }
 
     function log() {
-        screen.value += 'log('; // Append log(
+        appendText('log(');  // Append log(
     }
 
     function pow() {
-        screen.value += '^'; // Append ^ for exponent
-    }
-
-    function fact() {
-        screen.value += 'fact('; // Append fact(
+        appendText('**');  // Append ** for exponentiation
     }
 
     function sqrt() {
-        screen.value += 'sqrt('; // Append sqrt(
-    }
-
-    function multiply() {
-        screen.value += '*'; // Append * for multiplication
-    }
-
-    function subtract() {
-        screen.value += '-'; // Append - for subtraction
-    }
-
-    function add() {
-        screen.value += '+'; // Append + for addition
-    }
-
-    function openParenthesis() {
-        screen.value += '('; // Append ( for opening parenthesis
-    }
-
-    function closeParenthesis() {
-        screen.value += ')'; // Append ) for closing parenthesis
+        appendText('sqrt(');  // Append sqrt notation
     }
 
     function pi() {
-        screen.value += '3.14159265358979323846'; // Append the value of π
+        appendText('3.141592653589793');  // Append the value of π
     }
 
     function e() {
-        screen.value += '2.71828182845904523536'; // Append the value of e
+        appendText('2.718281828459045');  // Append the value of e
+    }
+
+    function fact() {
+        appendText('fact(');  // Append factorial
     }
 
     function backspc() {
-        screen.value = screen.value.substr(0, screen.value.length-1);
+        screen.value = screen.value.substr(0, screen.value.length - 1);
     }
 
+    function clearScreen() {
+        screen.value = '';
+        historyArray = [];  // Clear the history array
+    }
+
+    // Update the display with the history
+    function updateDisplay() {
+        screen.value = historyArray.join('\n');  // Join the history array and display it
+    }
+
+    // Improved evaluateExpression function with history saving
     function evaluateExpression() {
-        // Evaluate the functions correctly
-        const expr = screen.value
-            .replace(/sin\(([^)]+)\)/g, function(match, p1) {
-                return Math.sin(p1);
-            })
-            .replace(/cos\(([^)]+)\)/g, function(match, p1) {
-                return Math.cos(p1);
-            })
-            .replace(/tan\(([^)]+)\)/g, function(match, p1) {
-                return Math.tan(p1);
-            })
-            .replace(/log\(([^)]+)\)/g, function(match, p1) {
-                return Math.log(p1);
-            })
-            .replace(/sqrt\(([^)]+)\)/g, function(match, p1) {
-                return Math.sqrt(p1);
-            })
-            .replace(/fact\(([^)]+)\)/g, function(match, p1) {
-                return factorial(p1);
-            });
+        let expr = screen.value;
 
-        screen.value = eval(expr); // Evaluate the final expression
+        // Replace mathematical functions with JavaScript's Math functions
+        expr = expr.replace(/sin\(/g, 'Math.sin(');
+        expr = expr.replace(/cos\(/g, 'Math.cos(');
+        expr = expr.replace(/tan\(/g, 'Math.tan(');
+        expr = expr.replace(/log\(/g, 'Math.log(');
+        expr = expr.replace(/sqrt\(/g, 'Math.sqrt(');
+
+        // Factorial calculation (fact(x))
+        expr = expr.replace(/fact\(([^)]+)\)/g, function (match, p1) {
+            return factorial(p1);
+        });
+
+        try {
+            // Evaluate the expression
+            let result = eval(expr);
+
+            if (isNaN(result) || !isFinite(result)) {
+                throw new Error("Invalid Calculation");
+            }
+
+            // Add current expression and result to the history array
+            historyArray.push(screen.value + ' = ' + result);
+
+            // Clear the input screen
+            screen.value = '';
+
+            // Update the display with history
+            updateDisplay();
+
+        } catch (error) {
+            // Display an error if evaluation fails
+            screen.value = 'Error';
+        }
     }
 
+    // Factorial function for 'fact()'
     function factorial(n) {
         n = parseInt(n);
-        if (n < 0) return NaN; // Factorial is not defined for negative numbers
-        if (n === 0) return 1; // 0! is 1
+        if (isNaN(n) || n < 0) return NaN;  // Factorial is not defined for negative numbers or non-numeric input
+        if (n === 0) return 1;  // 0! is 1
         let f = 1;
         for (let i = 1; i <= n; i++) {
             f *= i;
@@ -175,4 +170,5 @@
         return f;
     }
 </script>
+
 </html>
